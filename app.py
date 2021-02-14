@@ -9,13 +9,14 @@ def homepage():
     """
 
 @app.route('/user/<username>')
-def homepage(username):
+def userpage(username):
     r = requests.get('https://github.com/%s' % username)
     return """
         the user is {user}.
         <hr>
         {html}
         """.format(user=username, html=r.text)
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

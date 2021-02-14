@@ -10,12 +10,13 @@ def homepage():
 
 @app.route('/user/<username>')
 def userpage(username):
-    r = requests.get('https://github.com/%s' % username)
+    html = requests.get('https://github.com/%s' % username)
+    calendar = html.split('class="js-calendar-graph-svg">')[1].split('</svg')[0]
     return """
         the user is {user}.
         <hr>
         {html}
-        """.format(user=username, html=r.text)
+        """.format(user=username, html=calendar)
 
 
 if __name__ == '__main__':

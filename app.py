@@ -10,7 +10,7 @@ def homepage():
 
 @app.route('/user/<username>')
 def homepage(username):
-    r = requests.get('https://github.com/tomas-b')
+    r = requests.get('https://github.com/%s' % username)
     return """
         the user is {user}.
         <hr>

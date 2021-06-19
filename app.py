@@ -7,9 +7,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
 def homepage():
-    return """
-    <h1>sup heroku</h1>
-    """
+    return """test"""
 
 # https://stackoverflow.com/questions/46490348/split-a-list-with-nn-elements-into-n-lists-with-n-elements-in-every-list
 # def chunkify(items, chunk_len):

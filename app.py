@@ -14,8 +14,13 @@ def homepage():
 @app.route('/cb/<code>')
 @cross_origin()
 def githubCallback(code):
-    client_secret = os.environ.get('client_secret')
-    return client_secret
+    apiResponse = requests.post('https://github.com/login/oauth/access_token', data = {
+        'client_id' : os.environ.get('client_id')
+        'client_secret' : os.environ.get('client_secret')
+        'code' : code
+    })
+
+    return apiResponse.json()
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

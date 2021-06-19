@@ -14,11 +14,14 @@ def homepage():
 @app.route('/cb/<code>')
 @cross_origin()
 def githubCallback(code):
-    apiResponse = requests.post('https://github.com/login/oauth/access_token', data = {
-        'client_id': os.environ.get('client_id')
-        'client_secret': os.environ.get('client_secret')
+
+    data = {
+        'client_id': os.environ.get('client_id'),
+        'client_secret': os.environ.get('client_secret'),
         'code': code
-    })
+    }
+
+    apiResponse = requests.post('https://github.com/login/oauth/access_token', data=data)
 
     return apiResponse.text
 

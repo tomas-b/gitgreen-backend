@@ -6,6 +6,7 @@ import json
 import random
 import base64
 from git import Repo
+from pathlib import Path
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -37,23 +38,32 @@ def githubCallback(code):
 
     username = gbUserAPI['login']
 
-    return oauthResponse['access_token']
+    # return oauthResponse['access_token']
 
-    # repo_name = os.path.join(rw_dir, 'ggtest')
-    # bare_repo = Repo.init(os.path.join(rw_dir, 'ggtest'), bare=True)
+    repoName = 'GG-' + ''.join(random.choice('ABCDEF1234567890') for _ in range(6))
+    repoDir = os.path.join(Path().absolute(), 'repos', repoName)
+    os.makedirs(repoDir)
 
-    # return repo_name
+    data = json.dumps({
+        "name": repoName,
+        "description": "gitgreen repooo",
+        "homepage": "https://gitgreen.com"
+    })
 
-    # repoName = 'GGrin-' + ''.join(random.choice('ABCDEF1234567890') for _ in range(6))
+    createRepo = requests.post('https://api.github.com/user/repos', data=data, headers=accessTokenHeader)
+    urlRepo = createRepo.json()['html_url']
 
-    # data = json.dumps({
-    #     "name": repoName,
-    #     "description": "gitgreen repooo",
-    #     "homepage": "https://gitgreen.com"
-    # })
+    repo = Repo.clone_from(urlRepo, repoDir)
 
-    # createRepo = requests.post('https://api.github.com/user/repos', data=data, headers=accessTokenHeader)
-    # repo
+    f = open(os.path.join(repoDir, 'sup.txt'), 'w')
+    f.write("sup!")
+    f.close()
+
+    repo.git.add('.')
+    repo.git.commit(m='testinnn', date='2021-1-1')
+    repo.git.push('-u', 'origin', 'master')
+
+    return urlRepo
 
 
     # content = base64.b64encode("gitgreen_data".encode("ascii")).decode('ascii')

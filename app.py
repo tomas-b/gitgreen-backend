@@ -21,12 +21,7 @@ def homepage():
 @cross_origin()
 def githubCallback(code):
 
-    commits = json.loads(request.args.get('commits'))
-    ret = ''
-    for commit in commits:
-        ret += commit[0]+' -> '+commit[1]
-
-    return ret
+    return (request.args.get('commits'))
 
 
     data = 

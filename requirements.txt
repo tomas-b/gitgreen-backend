@@ -2,7 +2,4 @@ Flask
 gunicorn
 requests
 flask-cors
-json
-random
 git
-base64

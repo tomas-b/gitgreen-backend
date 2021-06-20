@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import os
 import requests
 from flask_cors import CORS, cross_origin
@@ -21,7 +21,15 @@ def homepage():
 @cross_origin()
 def githubCallback(code):
 
-    data = {
+    commits = json.loads(request.args.get('commits'))
+    ret = ''
+    for commit in commits:
+        ret += commit[0]+' -> '+commit[1]
+
+    return ret
+
+
+    data = 
         'client_id': os.environ.get('client_id'),
         'client_secret': os.environ.get('client_secret'),
         'code': code

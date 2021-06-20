@@ -35,14 +35,20 @@ def githubCallback(code):
 
     accessTokenHeader = { 'Authorization': 'token '+oauthResponse['access_token'], 'accept': 'application/vnd.github.v3+json' }
     gbUserAPI = requests.get('https://api.github.com/user', headers=accessTokenHeader).json()
-
+    gbUserAPImail = requests.get('https://api.github.com/user/emails', headers=accessTokenHeader).json()
     username = gbUserAPI['login']
+    useremail = gbUserAPImail[0]['email']
 
     # return oauthResponse['access_token']
 
     repoName = 'GG-' + ''.join(random.choice('ABCDEF1234567890') for _ in range(6))
     repoDir = os.path.join(Path().absolute(), 'repos', repoName)
     os.makedirs(repoDir)
+
+
+    os.system("git config --global user.name "+username)
+    os.system("git config --global user.email "+useremail)
+
 
     data = json.dumps({
         "name": repoName,
@@ -51,12 +57,8 @@ def githubCallback(code):
     })
 
     createRepo = requests.post('https://api.github.com/user/repos', data=data, headers=accessTokenHeader)
-    urlRepo = createRepo.json()['html_url']
-
-    project_dir = os.path.dirname(os.path.abspath(__file__))
-    os.environ['GIT_ASKPASS'] = os.path.join(project_dir, 'askpass.py')
-    os.environ['GIT_USERNAME'] = username
-    os.environ['GIT_PASSWORD'] = oauthResponse['access_token']
+    # return createRepo.json()#['html_url']
+    urlRepo = 'https://' +username + ':' + oauthResponse['access_token'] + '@github.com/' + createRepo.json()['full_name']
 
     repo = Repo.clone_from(urlRepo, repoDir)
 

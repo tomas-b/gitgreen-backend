@@ -53,6 +53,11 @@ def githubCallback(code):
     createRepo = requests.post('https://api.github.com/user/repos', data=data, headers=accessTokenHeader)
     urlRepo = createRepo.json()['html_url']
 
+    project_dir = os.path.dirname(os.path.abspath(__file__))
+    os.environ['GIT_ASKPASS'] = os.path.join(project_dir, 'askpass.py')
+    os.environ['GIT_USERNAME'] = username
+    os.environ['GIT_PASSWORD'] = oauthResponse['access_token']
+
     repo = Repo.clone_from(urlRepo, repoDir)
 
     f = open(os.path.join(repoDir, 'sup.txt'), 'w')

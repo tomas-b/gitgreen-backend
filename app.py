@@ -16,13 +16,9 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def homepage():
     return ';)'
 
-
 @app.route('/cb/<code>')
 @cross_origin()
 def githubCallback(code):
-
-    return (request.args.get('commits'))
-
 
     data = {
         'client_id': os.environ.get('client_id'),
@@ -65,12 +61,19 @@ def githubCallback(code):
 
     repo = Repo.clone_from(urlRepo, repoDir)
 
-    f = open(os.path.join(repoDir, 'sup.txt'), 'w')
-    f.write("sup!")
-    f.close()
+    commits = json.loads(request.args.get('commmits'))
 
-    repo.git.add('.')
-    repo.git.commit(m='testinnn', date='2021-1-1')
+    for commit in commits:
+        date, count = commit
+        for i in range(count):
+
+            f = open(os.path.join(repoDir, '_.txt'), 'w')
+            f.write(date+'!'+str(i))
+            f.close()
+
+            repo.git.add('.')
+            repo.git.commit(m='gitgreen', date=date)
+
     repo.git.push('-u', 'origin', 'master')
 
     return urlRepo
